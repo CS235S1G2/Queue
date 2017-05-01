@@ -32,6 +32,9 @@ void stocksBuySell()
    cout << "  quit            - Display a final report and quit the program\n";
 
    // your code here...
+   // TODO delete this line. I just added it to pause the terminal to see the input and output.
+   int j;
+   cin >> j;
 }
 
 

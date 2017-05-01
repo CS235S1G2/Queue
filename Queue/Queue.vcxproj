@@ -112,7 +112,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\dollars.cpp" />
-    <ClCompile Include="..\dollarsTest.cpp" />
     <ClCompile Include="..\stock.cpp" />
     <ClCompile Include="..\week03.cpp" />
   </ItemGroup>

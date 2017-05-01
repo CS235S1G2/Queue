@@ -18,9 +18,6 @@
     <ClCompile Include="..\dollars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\dollarsTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\stock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
