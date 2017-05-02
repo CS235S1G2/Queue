@@ -61,11 +61,11 @@ public:
 
    // Returns the item currently at the front of the queue
    T & front()     throw (const char *);
-   T front() const throw (const char *);
+   //T front() const throw (const char *);
    
    // Returns the item currently at the front of the queue
    T & back()     throw (const char *);
-   T back() const throw (const char *);
+   //T back() const throw (const char *);
    
    // assignment operator '='
    Queue<T> & operator = (const Queue <T> & rhs);
@@ -85,26 +85,22 @@ private:
 
 /*******************************************
 * QUEUE :: IHEAD
+* returns the front index of the queue
 *******************************************/
 template <class T>
 int Queue<T> :: iHead() const
 {
-   if (m_numPop >= m_capacity)
-       return m_numPop % m_capacity;
-   else
-      return m_numPop;
+   return m_numPop % m_capacity;
 }
  
 /*******************************************
 * QUEUE :: ITAIL
+* returns the back index of the queue
 *******************************************/
 template <class T>
 int Queue<T> :: iTail() const
 {
-   if (m_numPush >= m_capacity)
-      return (m_numPush - 1) % m_capacity;
-   else
-      return m_numPush;
+   return (m_numPush - 1) % m_capacity;
 }
 
 /*******************************************
@@ -115,8 +111,6 @@ Queue <T> :: Queue(const Queue <T> & rhs) throw (const char *)
 {
    assert(rhs.m_capacity >= 0);
    
-   m_numPush = m_numPop = 0;
-   
    // resize array to the rhs
    if (m_capacity < rhs.size())
    {
@@ -124,22 +118,33 @@ Queue <T> :: Queue(const Queue <T> & rhs) throw (const char *)
       {
          T * temp = new T[rhs.size()];
          
+         // delete data
          if(m_data)
-            delete [] m_data;
+         delete [] m_data;
          
+         // assign new data
          m_data = temp;
-         
-         // copy over data
-         for (int i = rhs.iHead(); i < rhs.iTail(); i++)
-         {
-         push(rhs.m_data[i]);
-         }
       }
       catch (std::bad_alloc)
       {
          throw "ERROR: Unable to allocate a new buffer for queue";
       }
    }
+   
+   // insure the indices are beginning at 0
+   m_numPop = 0;
+   m_numPush = 0;   
+   
+   // IF there is data to copy
+   if (rhs.size() > 0)
+   {      
+      // copy over data
+      for (int i = rhs.iHead(); i % rhs.m_capacity != rhs.iTail(); i++)
+      {
+         push(rhs.m_data[i % rhs.m_capacity]);
+      }
+   }
+
 }
 
 /**********************************************
@@ -170,9 +175,9 @@ Queue <T> :: Queue(int capacity) throw (const char *)
    }
 
       
-   // copy over the stuff
-   this->m_capacity = capacity;
-   this->m_numPush = m_numPop = 0;
+   // SET member variables
+   m_capacity = capacity;
+   m_numPush = m_numPop = 0;
 
    // initialize the container by calling the default constructor
    for (int i = 0; i < m_capacity; i++)
@@ -223,14 +228,14 @@ T & Queue<T> :: front() throw(const char *)
 * QUEUE :: FRONT C
 * Returns the item currently at the front of the queue by const value
 **************************************************/
-template<class T>
+/*template<class T>
 T Queue<T> :: front() const throw(const char *)
 {
 	// if empty
 	if (empty())
 		throw "ERROR: attempting to access an item in an empty queue";
 	return m_data[iHead()];      
-}
+}*/
 
 /***************************************************
 * QUEUE :: BACK
@@ -248,13 +253,13 @@ T & Queue<T> :: back()     throw (const char *)
 * QUEUE :: BACK C
 * Returns the item currently at the back of the queue by const value
 **************************************************/
-template<class T>
+/*template<class T>
 T Queue<T> :: back() const throw (const char *)
 {
    if (empty())
 		throw "ERROR: attempting to access an item in an empty queue";
 	return m_data[iTail()]; 
-}
+}*/
 
 /***************************************************
  * QUEUE :: =
@@ -269,11 +274,11 @@ Queue<T> & Queue <T> :: operator = (const Queue <T> & rhs)
       m_numPush = m_numPop = 0;
       
       // resize array to the rhs
-      if (m_capacity < rhs.m_capacity)
+      if (m_capacity < rhs.size())
          resize (rhs.size());
       
       // copy over data
-      for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
+      for (int i = rhs.iHead(); i % rhs.m_capacity != rhs.iTail(); i++)
       {
          push(rhs.m_data[i % rhs.m_capacity]);
       }
@@ -299,9 +304,9 @@ void Queue<T>::resize(int newCap)
       // copy over data -- Queue may be out of order
       // what will be the front? The back? Do those need to be consistent or updated? m_numPush, m_numPop?
       int index = 0;
-      for (int i = iHead(); i < iTail(); i++)
+      for (int i = iHead(); i % m_capacity != iTail(); i++)
       {
-         temp[index] = m_data[i];
+         temp[index] = m_data[i % m_capacity];
          index++;
       }
       
