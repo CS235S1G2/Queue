@@ -10,6 +10,7 @@
 
 #include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
 #include <string>      // for STRING
+#include <sstream>
 #include <cassert>     // for ASSERT
 #include "stock.h"     // for STOCK_TRANSACTION
 #include "dollars.h"   // used to handle currency
@@ -32,47 +33,81 @@ void stocksBuySell()
    cout << "  display         - Display your current stock portfolio\n";
    cout << "  quit            - Display a final report and quit the program\n";
 
+   stringstream ss;
+
    string instruction;
-   char token;
-   int shares;
-   string stringDollars;
-   cin >> instruction;
+   
+   string token;
+   int shares = 0;
+   string command;
+   char trash = ' ';
+   double dollars = 0;
+   //string stringDollars;
+   //cin >> instruction;
    while (instruction != "quit")
    {
-	   int i = 0;
-	   switch (token)
-	  {
-		   case 'b':
-			   i + 4;
-			   break;
-		   case 's':
-			   i + 5;
-		   break;
-	   }
-	   if (i == 4)
-	   {
-		   while (isalnum(instruction[i]))
-		   {
-			   numberOfShares.append(1, instruction[i]);
-			   i++;
-		   }
-		   while (i < instruction.length())
-		   {
-			   stringDollars.append(1, instruction[i]);
-			   i++;
-		   }
-	   }
-	   else if (i == 5)
-	   {
+	   getline(cin, instruction);
+	   istringstream ss(instruction);
+	   ss >> command >> shares >> trash >> dollars;
+	   cout << "command:" << command << " shares:" << shares << " trash:" << trash << " dollars:" << dollars;
+	  // int i = 0;
+	  // switch (token)
+	  //{
+		 //  case 'b':
+			//   i + 4;
+			//   break;
+		 //  case 's':
+			//   i + 5;
+		 //  break;
+	  // }
+	  // if (i == 4)
+	  // {
+		 //  while (isalnum(instruction[i]))
+		 //  {
+			//   numberOfShares.append(1, instruction[i]);
+			//   i++;
+		 //  }
+		 //  while (i < instruction.length())
+		 //  {
+			//   stringDollars.append(1, instruction[i]);
+			//   i++;
+		 //  }
+	  // }
+	  // else if (i == 5)
+	  // {
 
+	  // }
+	   if (command == "buy")
+	   {
+		   buyStock(shares, dollars);
+	   }
+	   else if (command == "sell")
+	   {
+		   sellStock(shares, dollars);
+	   }
+	   else if (command == "display")
+	   {
+		   display();
 	   }
    }
 }
 
-// TODO delete main
-int main()
+void buyStock(int shares, double dollars)
 {
-	return 0;
-};
+}
+
+void sellStock(int shars, double dollars)
+{
+}
+
+void display()
+{
+}
+
+// TODO delete main
+//int main()
+//{
+//	return 0;
+//};
 
 
