@@ -84,13 +84,15 @@ void display(Dollars proceeds)
 	cout << "Currently held:\n";
 	while (!qTempShares.empty())
 	{
-		cout << "\tBought " << qTempShares.front() << " shares at " << qTempDollars.front();
+		cout << "\tBought " << qTempShares.front() << " shares at " << qTempDollars.front() << endl;
 		qTempShares.pop();
 		qTempDollars.pop();
 	}
 	if (!qSellHistory.empty())
 		cout << "\nSell History:\n";
 	// while the queue is not empty
+	if (qSellHistory.empty())
+		cout << endl;
 	while(!qSellHistory.empty())
 	{
 		cout << "\t" << qSellHistory.front() << endl;
