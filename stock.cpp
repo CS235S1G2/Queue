@@ -77,14 +77,26 @@ Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 		return proceeds;
 }
 
-void display()
+void display(Dollars proceeds)
 {
+	cout << "Currently held:\n";
+	queue <Dollars> qTempDollars(qDollars);
+	queue <int> qTempShares(qShares);
+	while (!qTempShares.empty())
+	{
+		cout << "\tBought " << qTempShares.front() << " shares at " << qTempDollars.front();
+		qTempShares.pop();
+		qTempDollars.pop();
+	}
+	if (!qSellHistory.empty())
+		cout << "Sell History:\n";
 	// while the queue is not empty
 	while(!qSellHistory.empty())
 	{
-		cout << qSellHistory.front() << endl;
+		cout << "\t" << qSellHistory.front() << endl;
 		qSellHistory.pop();
 	}
+	cout << "Proceeds: " << proceeds;
 }
 
 /************************************************
@@ -123,7 +135,7 @@ void stocksBuySell()
 		}
 		else if (command == "display")
 		{
-			display();
+			display(proceeds);
 		}
 	}
 }
