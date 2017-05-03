@@ -5,7 +5,7 @@
 *    This will contain the implementation for stocksBuySell() as well
 *    as any other function or class implementation you need
 * Author
-*    <your names here>
+*    Justin Chandler, Jeremy Chandler
 **********************************************************************/
 
 #include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
