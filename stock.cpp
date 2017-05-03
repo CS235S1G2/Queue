@@ -28,7 +28,7 @@ void buyStock(int sharesToBeBought, Dollars buyPrice)
 	qDollars.push(buyPrice);
 }
 
-Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
+void sellStock(int sharesToBeSold, Dollars sellPrice)
 {
 	int soldShares = 0;
 	Dollars proceeds = 0;
@@ -118,7 +118,7 @@ void stocksBuySell()
 		}
 		else if (command == "sell")
 		{
-			proceeds = sellStock(shares, price);
+			sellStock(shares, price);
 		}
 		else if (command == "display")
 		{
