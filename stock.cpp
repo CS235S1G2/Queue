@@ -74,7 +74,6 @@ Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 		}
 		s1 = ss.str();
 		qSellHistory.push(s1);
-		return proceeds;
 }
 
 void display(Dollars proceeds)
@@ -89,14 +88,14 @@ void display(Dollars proceeds)
 		qTempDollars.pop();
 	}
 	if (!qSellHistory.empty())
-		cout << "Sell History:\n";
+		cout << "\nSell History:\n";
 	// while the queue is not empty
 	while(!qSellHistory.empty())
 	{
 		cout << "\t" << qSellHistory.front() << endl;
 		qSellHistory.pop();
 	}
-	cout << "Proceeds: " << proceeds;
+	cout << "Proceeds: " << proceeds << endl;
 }
 
 /************************************************
