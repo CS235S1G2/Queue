@@ -74,13 +74,14 @@ Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 		}
 		s1 = ss.str();
 		qSellHistory.push(s1);
+		return proceeds;
 }
 
 void display(Dollars proceeds)
 {
-	cout << "Currently held:\n";
 	queue <Dollars> qTempDollars(qDollars);
 	queue <int> qTempShares(qShares);
+	cout << "Currently held:\n";
 	while (!qTempShares.empty())
 	{
 		cout << "\tBought " << qTempShares.front() << " shares at " << qTempDollars.front();
