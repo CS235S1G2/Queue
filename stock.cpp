@@ -79,6 +79,7 @@ Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 
 void display(Dollars proceeds)
 {
+
 	queue <Dollars> qTempDollars(qDollars);
 	queue <int> qTempShares(qShares);
 	cout << "Currently held:\n";
@@ -89,7 +90,7 @@ void display(Dollars proceeds)
 		qTempDollars.pop();
 	}
 	if (!qSellHistory.empty())
-		cout << "\nSell History:\n";
+		cout << "Sell History:\n";
 	// while the queue is not empty
 	if (qSellHistory.empty())
 		cout << endl;
