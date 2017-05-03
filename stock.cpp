@@ -74,6 +74,7 @@ Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 		}
 		s1 = ss.str();
 		qSellHistory.push(s1);
+		return proceeds;
 }
 
 void display()
