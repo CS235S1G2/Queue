@@ -20,15 +20,15 @@ using namespace std;
 
 queue <int> qShares;
 queue <Dollars> qDollars;
-queue <string> qTransactionHistory;
+queue <string> qSellHistory;
 
-void buyStock(int shares, Dollars dollars)
+void buyStock(int sharesToBeBought, Dollars buyPrice)
 {
-	qShares.push(shares);
-	qDollars.push(dollars);
+	qShares.push(sharesToBeBought);
+	qDollars.push(buyPrice);
 }
 
-Dollars sellStock(int sharesToBeSold, Dollars dollars)
+Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 {
 	int soldShares = 0;
 	Dollars proceeds = 0;
@@ -42,7 +42,7 @@ Dollars sellStock(int sharesToBeSold, Dollars dollars)
 			// add shares of one transaction
 			soldShares += qShares.front();
 			// figure out the proceeds 
-			proceeds += (dollars - qDollars.front()) * qShares.front();
+			proceeds += (sellPrice - qDollars.front()) * qShares.front();
 			// remove that transaction
 			qShares.pop();
 			qDollars.pop();
@@ -54,7 +54,7 @@ Dollars sellStock(int sharesToBeSold, Dollars dollars)
 		qShares.front() -= (sharesToBeSold);
 		soldShares += sharesToBeSold;
 		// proceeds = buying price * the rest of the shares we need to sell
-		proceeds += (dollars - qDollars.front()) * (sharesToBeSold);
+		proceeds += (sellPrice - qDollars.front()) * (sharesToBeSold);
 	}
 		// We sold all the shares we needed to sell, update the record
 		sharesToBeSold = 0;
@@ -65,24 +65,24 @@ Dollars sellStock(int sharesToBeSold, Dollars dollars)
 		string s4 = " for a loss of ";
 		// We made a profit
 		if (proceeds >= 0)
-			ss << s1 << soldShares << s2 << dollars << s3 << proceeds;
+			ss << s1 << soldShares << s2 << sellPrice << s3 << proceeds;
 		// We made a loss
 		else
 		{
 			proceeds = proceeds * -1;
-			ss << s1 << soldShares << s2 << dollars << s4 << proceeds;
+			ss << s1 << soldShares << s2 << sellPrice << s4 << proceeds;
 		}
 		s1 = ss.str();
-		qTransactionHistory.push(s1);
+		qSellHistory.push(s1);
 }
 
 void display()
 {
 	// while the queue is not empty
-	while(!qTransactionHistory.empty())
+	while(!qSellHistory.empty())
 	{
-		cout << qTransactionHistory.front() << endl;
-		qTransactionHistory.pop();
+		cout << qSellHistory.front() << endl;
+		qSellHistory.pop();
 	}
 }
 
@@ -103,22 +103,22 @@ void stocksBuySell()
 
 	Dollars proceeds;
 	stringstream ss;
-	string instruction;
+	string userInput;
 	int shares = 0;
-	string command;
-	Dollars dollars;
-	while (instruction != "quit")
+	string command; // ex. buy, sell, display
+	Dollars price;
+	while (userInput != "quit")
 	{
-		getline(cin, instruction);
-		istringstream ss(instruction);
-		ss >> command >> shares >> dollars;
+		getline(cin, userInput);
+		istringstream ss(userInput);
+		ss >> command >> shares >> price;
 		if (command == "buy")
 		{
-			buyStock(shares, dollars);
+			buyStock(shares, price);
 		}
 		else if (command == "sell")
 		{
-			proceeds = sellStock(shares, dollars);
+			proceeds = sellStock(shares, price);
 		}
 		else if (command == "display")
 		{
