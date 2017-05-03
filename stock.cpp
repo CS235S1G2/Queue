@@ -5,7 +5,7 @@
 *    This will contain the implementation for stocksBuySell() as well
 *    as any other function or class implementation you need
 * Author
-*    Justin Chandler, Jeremy Chandler
+*    <your names here>
 **********************************************************************/
 
 #include <iostream>    // for ISTREAM, OSTREAM, CIN, and COUT
@@ -28,7 +28,7 @@ void buyStock(int sharesToBeBought, Dollars buyPrice)
 	qDollars.push(buyPrice);
 }
 
-void sellStock(int sharesToBeSold, Dollars sellPrice)
+Dollars sellStock(int sharesToBeSold, Dollars sellPrice)
 {
 	int soldShares = 0;
 	Dollars proceeds = 0;
@@ -76,14 +76,26 @@ void sellStock(int sharesToBeSold, Dollars sellPrice)
 		qSellHistory.push(s1);
 }
 
-void display()
+void display(Dollars proceeds)
 {
+	cout << "Currently held:\n";
+	queue <Dollars> qTempDollars(qDollars);
+	queue <int> qTempShares(qShares);
+	while (!qTempShares.empty())
+	{
+		cout << "\tBought " << qTempShares.front() << " shares at " << qTempDollars.front();
+		qTempShares.pop();
+		qTempDollars.pop();
+	}
+	if (!qSellHistory.empty())
+		cout << "Sell History:\n";
 	// while the queue is not empty
 	while(!qSellHistory.empty())
 	{
-		cout << qSellHistory.front() << endl;
+		cout << "\t" << qSellHistory.front() << endl;
 		qSellHistory.pop();
 	}
+	cout << "Proceeds: " << proceeds;
 }
 
 /************************************************
@@ -118,11 +130,11 @@ void stocksBuySell()
 		}
 		else if (command == "sell")
 		{
-			sellStock(shares, price);
+			proceeds = sellStock(shares, price);
 		}
 		else if (command == "display")
 		{
-			display();
+			display(proceeds);
 		}
 	}
 }
