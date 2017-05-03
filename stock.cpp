@@ -92,8 +92,6 @@ void display(Dollars proceeds)
 	if (!qSellHistory.empty())
 		cout << "Sell History:\n";
 	// while the queue is not empty
-	if (qSellHistory.empty())
-		cout << endl;
 	while(!qSellHistory.empty())
 	{
 		cout << "\t" << qSellHistory.front() << endl;
