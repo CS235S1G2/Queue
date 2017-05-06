@@ -27,7 +27,7 @@ class Queue
 {
 public:
    // default constructor : empty and kinda useless
-   Queue() : m_numPush(0), m_numPop(0), m_capacity(1), m_data(NULL) {}
+   Queue() : m_numPush(0), m_numPop(0), m_capacity(0), m_data(NULL) {}
 
    // copy constructor : copy it
    Queue(const Queue<T> & rhs) throw (const char *);
