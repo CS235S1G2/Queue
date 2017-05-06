@@ -12,8 +12,7 @@
 
 #include <iostream>    // for CIN and COUT
 #include <string>      //
-// TODO I'm temporarily taking this off until it works. #include "queue.h"     // your Queue class should be in queue.h
-#include <queue>
+#include "queue.h"     // your Queue class should be in queue.h
 #include "stock.h"     // your stocksBuySell() function
 #include "dollars.h"   // for the Dollars class
 using namespace std;

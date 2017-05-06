@@ -14,8 +14,7 @@
 #include <cassert>     // for ASSERT
 #include "stock.h"     // for STOCK_TRANSACTION
 #include "dollars.h"   // used to handle currency
-//TODO add back in queue #include "queue.h"     // for QUEUE
-#include <queue>
+#include "queue.h"     // for QUEUE
 using namespace std;
 
 queue <int> qShares;
