@@ -1,254 +1,320 @@
 /***********************************************************************
-* Header:
-*    Queue
-* Summary:
-*    This class contains the notion of a stack: a container
-*    that follows First In First Out behavior and
-*    expands as more items are put inside.
-*
-*    This will contain the class definition of:
-*        Queue         : A class that holds stuff
-* Author
-*    Nathan Bench, Jed Billman, Justin Chandler, Jeremy Chandler
+* Program:
+*    Week 03, Queue
+*    Brother Helfrich, CS 235
+* Author:
+*    Br. Helfrich
+* Summary: 
+*    This is a driver program to exercise the Queue class.  When you
+*    submit your program, this should not be changed in any way.  That being
+*    said, you may need to modify this once or twice to get it to work.
 ************************************************************************/
 
-#ifndef QUEUE_H
-#define QUEUE_H
+#include <iostream>    // for CIN and COUT
+#include <string>      //
+#include "queue.h"     // your Queue class should be in queue.h
+#include "stock.h"     // your stocksBuySell() function
+#include "dollars.h"   // for the Dollars class
+using namespace std;
 
-#include <cassert>
-#include <new>
 
-/************************************************
- * QUEUE
- * A class that holds stuff
- ***********************************************/
-template <class T>
-class Queue
+// prototypes for our four test functions
+void testSimple();
+void testPushPopTop();
+void testCircular();
+void testErrors();
+
+// To get your program to compile, you might need to comment out a few
+// of these. The idea is to help you avoid too many compile errors at once.
+// I suggest first commenting out all of these tests, then try to use only
+// TEST1.  Then, when TEST1 works, try TEST2 and so on.
+#define TEST1   // for testSimple()
+#define TEST2   // for testPushPopTop()
+#define TEST3   // for testCircular()
+#define TEST4   // for testErrors()
+
+/**********************************************************************
+ * MAIN
+ * This is just a simple menu to launch a collection of tests
+ ***********************************************************************/
+int main()
 {
-public:
-   // default constructor : empty and kinda useless
-   Queue() : m_top(0), m_capacity(0), m_data(NULL) {}
+   // menu
+   cout << "Select the test you want to run:\n";
+   cout << "\t1. Just create and destroy a Queue\n";
+   cout << "\t2. The above plus push, pop, and top\n";
+   cout << "\t3. The above plus test implementation of the circular Queue\n";
+   cout << "\t4. Exercise the error handling\n";
+   cout << "\ta. Selling Stock\n";
 
-   // copy constructor : copy it
-   Queue(const Queue & rhs) throw (const char *);
-   
-   // non-default constructor : pre-allocate
-   Queue(int capacity) throw (const char *);
-   
-   // destructor : free everything
-   ~Queue()        { if (m_capacity) delete [] m_data; }
-   
-   // is the container currently empty
-   bool empty() const  { return m_top == 0;         }
+   // select
+   char choice;
+   cout << "> ";
+   cin  >> choice;
+   switch (choice)
+   {
+      case 'a':
+         stocksBuySell();
+         break;
+      case '1':
+         testSimple();
+         cout << "Test 1 complete\n";
+         break;
+      case '2':
+         testPushPopTop();
+         cout << "Test 2 complete\n";
+         break;
+      case '3':
+         testCircular();
+         cout << "Test 3 complete\n";
+         break;
+      case '4':
+         testErrors();
+         cout << "Test 4 complete\n";
+         break;
+      default:
+         cout << "Unrecognized command, exiting...\n";
+   }
 
-   // remove all the items from the container
-   void clear()        { m_top = 0;                 }
-
-   // how many items can the stack currently contain?
-   int capacity() const { return m_capacity;             }
-   
-   // how many items are currently in the container?
-   int size() const    { return m_top;              }
-
-   // increase the capacity
-   void increaseCapacity();
-
-   // add an item to the container
-   void push(const T & t) throw (const char *);
-
-   // Removes an item from the end of the stack, and reduces size by one
-   void pop() throw (const char *);
-
-   // Returns the item currently at the end of the stack
-   T & top() const throw (const char *);
-   
-   // assignment operator '='
-   Queue<T> & operator = (const Queue <T> & rhs);
-   
-   
-private:
-   T * m_data;          // dynamically allocated array of T
-   int m_top;      // how many items are currently in the Queue?
-   int m_capacity;      // how many items can I put on the Queue before full?
-};
-
+   return 0;
+}
 
 /*******************************************
- * QUEUE :: COPY CONSTRUCTOR
+ * TEST SIMPLE
+ * Very simple test for a Queue: create and destroy
+ ******************************************/
+void testSimple()
+{
+#ifdef TEST1
+   try
+   {
+      // Test 1.a: bool Queue with default constructor
+      cout << "Create a bool Queue using default constructor\n";
+      Queue <bool> q1;
+      cout << "\tSize:     " << q1.size()                   << endl;
+      cout << "\tCapacity: " << q1.capacity()               << endl;
+      cout << "\tEmpty?    " << (q1.empty() ? "Yes" : "No") << endl;
+
+      // Test 1.b: double Queue with non-default constructor
+      cout << "Create a double Queue using the non-default constructor\n";
+      Queue <double> q2(10 /*capacity*/);
+      cout << "\tSize:     " << q2.size()                   << endl;
+      cout << "\tCapacity: " << q2.capacity()               << endl;
+      cout << "\tEmpty?    " << (q2.empty() ? "Yes" : "No") << endl;
+
+      // Test 1.c: copy the Queue using the copy constructor
+      {
+         cout << "Create a double Queue using the copy constructor\n";
+         Queue <double> q3(q2);
+         cout << "\tSize:     " << q3.size()                   << endl;
+         cout << "\tCapacity: " << q3.capacity()               << endl;
+         cout << "\tEmpty?    " << (q3.empty() ? "Yes" : "No") << endl;
+      }
+
+      // Test 1.d: copy the Queue using the assignment operator
+      cout << "Copy a double Queue using the assignment operator\n";
+      Queue <double> q4(2);
+      q4 = q2;
+      cout << "\tSize:     " << q4.size()                   << endl;
+      cout << "\tCapacity: " << q4.capacity()               << endl;
+      cout << "\tEmpty?    " << (q4.empty() ? "Yes" : "No") << endl;
+   }
+   catch (const char * sError)
+   {
+      cout << sError << endl;
+   }   
+#endif //TEST1
+}
+
+#ifdef TEST2
+/******************************************
+ * DISPLAY
+ * Display the contents of the queue
+ ******************************************/
+template <class T>
+ostream & operator << (ostream & out, Queue <T> q) 
+{
+   
+   out << "{ ";
+   while (!q.empty())
+   {
+      out << q.front() << ' ';
+      q.pop();
+   }
+   out << '}';
+
+   return out;
+}
+#endif // TEST2
+
+/*******************************************
+ * TEST PUSH POP TOP
+ * Add a whole bunch of items to the Queue.  This will
+ * test the Queue growing algorithm
+ *****************************************/
+void testPushPopTop()
+{
+#ifdef TEST2
+   try
+   {
+      // create
+      Queue <Dollars> q1;
+      Dollars noMoney;
+
+      // fill
+      cout << "Enter money amounts, type $0 when done\n";
+      Dollars money;
+      do
+      {
+         cout << "\t" << q1 << " > ";
+         cin  >> money;
+         if (money != noMoney)
+            q1.push(money);
+      }
+      while (money != noMoney);
+
+      // display how big it is
+      cout << "\tSize:     " << q1.size()                   << endl;
+      cout << "\tEmpty?    " << (q1.empty() ? "Yes" : "No") << endl;
+      cout << "\tCapacity: " << q1.capacity()               << endl;
+
+      // make a copy of it using the assignment operator and copy constructor
+      Queue <Dollars> q2(2);
+      q2 = q1;
+      Queue <Dollars> q3(q1);
+
+      // destroy the old copy
+      q1.clear();
+      q1.push(money);
+      q1.pop();
+
+      // display the two copies
+      cout << "\tq1 = " << q1 << endl;
+      cout << "\tq2 = " << q2 << endl;
+      cout << "\tq3 = " << q3 << endl;
+   }
+   catch (const char * sError)
+   {
+      cout << sError << endl;
+   }
+   
+#endif // TEST2   
+}
+
+/*******************************************
+ * TEST CIRCULAR
+ * This will test whether the circular aspect
+ * of the Queue is working correctly
+ ******************************************/
+void testCircular()
+{
+#ifdef TEST3
+   // create
+   cout << "Create a string Queue with the default constructor\n";
+   Queue <string> q(4);
+
+   // instructions
+   cout << "\tTo add the word \"dog\", type +dog\n";
+   cout << "\tTo pop the word off the queue, type -\n";
+   cout << "\tTo display the state of the queue, type *\n";
+   cout << "\tTo quit, type !\n";
+
+   // interact
+   char instruction;
+   string word;
+   try
+   {
+      do
+      {
+         cout << "\t" << q << " > ";
+         cin  >> instruction;
+         switch (instruction)
+         {
+            case '+':
+               cin >> word;
+               q.push(word);
+               break;
+            case '-':
+               q.pop();
+               break;
+            case '*':
+               cout << "Size:     " << q.size()                   << endl;
+               cout << "Empty?    " << (q.empty() ? "Yes" : "No") << endl;
+               cout << "Capacity: " << q.capacity()               << endl;
+               break;
+            case '!':
+               break;
+            default:
+               cout << "Invalid command\n";
+         }            
+      }
+      while (instruction != '!');
+   }
+   catch (const char * error)
+   {
+      cout << error << endl;
+   }
+
+   // verify that copy works as we expect
+   Queue <string> qCopy(q);
+   assert(q.size()     == qCopy.size()    );
+   assert(q.empty()    == qCopy.empty()   );
+   while (!q.empty())
+   {
+      assert(q.front() == qCopy.front());
+      assert(q.back()  == qCopy.back() );
+      assert(q.size()  == qCopy.size() );
+      q.pop();
+      qCopy.pop();
+   }
+#endif // TEST3
+}
+
+/*******************************************
+ * TEST ERRORS
+ * Numerous error conditions will be tested
+ * here, including bogus popping and the such
  *******************************************/
-template <class T>
-Queue <T> :: Queue(const Queue <T> & rhs) throw (const char *)
+void testErrors()
 {
-   assert(rhs.m_capacity >= 0);
-      
-   // do nothing if there is nothing to do
-   if (rhs.m_capacity == 0)
-   {
-      m_capacity = m_top = 0;
-      m_data = NULL;
-      return;
-   }
+#ifdef TEST4
+   // create
+   Queue <char> q;
 
-   // attempt to allocate
+   // test using front() with an empty queue
    try
    {
-      m_data = new T[rhs.m_capacity];
+      q.front();
+      cout << "BUG! We should not be able to front() with an empty queue!\n";
    }
-   catch (std::bad_alloc)
+   catch (const char * error)
    {
-      throw "ERROR: Unable to allocate buffer";
-   }
-   
-   // copy over the capacity and size
-   assert(rhs.m_top >= 0 && rhs.m_top <= rhs.m_capacity);
-   m_capacity = rhs.m_capacity;
-   m_top = rhs.m_top;
-
-   // copy the items over one at a time using the assignment operator
-   for (int i = 0; i < m_top; i++)
-      m_data[i] = rhs.m_data[i];
-
-   // the rest needs to be filled with the default value for T
-   for (int i = m_top; i < m_capacity; i++)
-      m_data[i] = T();
-}
-
-/**********************************************
- * QUEUE : NON-DEFAULT CONSTRUCTOR
- * Preallocate the container to "capacity"
- **********************************************/
-template <class T>
-Queue <T> :: Queue(int capacity) throw (const char *)
-{
-   assert(capacity >= 0);
-   
-   // do nothing if there is nothing to do
-   if (m_capacity == 0)
-   {
-      this->m_capacity = this->m_top = 0;
-      this->m_data = NULL;
-      return;
+      cout << "\tQueue::front() error message correctly caught.\n"
+           << "\t\"" << error << "\"\n";
    }
 
-   // attempt to allocate
+   // test using back() with an empty queue
    try
    {
-      m_data = new T[capacity];
+      q.back();
+      cout << "BUG! We should not be able to back() with an empty queue!\n";
    }
-   catch (std::bad_alloc)
+   catch (const char * error)
    {
-      throw "ERROR: Unable to allocate buffer";
+      cout << "\tQueue::back() error message correctly caught.\n"
+           << "\t\"" << error << "\"\n";
    }
 
-      
-   // copy over the stuff
-   this->m_capacity = capacity;
-   this->m_top = 0;
-
-   // initialize the container by calling the default constructor
-   for (int i = 0; i < m_capacity; i++)
-      m_data[i] = T();
-}
-
-/***************************************************
-* QUEUE :: INCREASE CAPACITY
-* Allocate memory for m_data
-**************************************************/
-template<class T>
-void Queue<T>::increaseCapacity()
-{
-	int newCap = m_capacity * 2;
-   
-	if (m_capacity == 0)
-		newCap = 1;
-   
-	T *temp = new T[newCap];
-	for (int i = 0; i < m_capacity; ++i)
-	{
-		temp[i] = m_data[i];
-	}
-   
-	m_capacity = newCap;
-	delete[] m_data;
-	m_data = temp;
-}
-
-/***************************************************
-* QUEUE :: PUSH
-* Adds an item to the top of the stack
-**************************************************/
-template<class T>
-void Queue<T>::push(const T & t) throw (const char *)
-{
-   // IF empty increase the capacity
-	if (empty() || m_capacity <= m_top)
-	{
-		increaseCapacity();
-	}
-	m_data[m_top] = t;
-	m_top++;
-}
-
-/***************************************************
-* QUEUE :: POP
-* Removes an item from the end of the stack, and reduces size by one
-**************************************************/
-template<class T>
-inline void Queue<T>::pop() throw(const char *)
-{
-	if (empty())
-		throw "ERROR: Unable to pop from an empty Queue";
-	m_top--;
-}
-
-/***************************************************
-* QUEUE :: TOP
-* Returns the item currently at the end of the stack
-**************************************************/
-template<class T>
-inline T & Queue<T>::top() const throw(const char *)
-{
-	// if empty: throw Unable to reference the element from an empty Queue
-	if (empty() || (m_top < 0))
-		throw "ERROR: Unable to reference the element from an empty Queue";
-	return m_data[m_top - 1];
-}
-
-/***************************************************
- * QUEUE :: =
- * Overload assignment operator
- **************************************************/
- template <class T>
-Queue<T> & Queue <T> :: operator = (const Queue <T> & rhs)
-{
-   // don't copy yourself
-   if (this != &rhs)
+   // test using pop() with an empty queue
+   try
    {
-      // clean up m_data
-      if (m_data)
-         delete [] m_data;
-      
-      // assign each member variable to right-hand-side
-      m_capacity = rhs.m_capacity;
-      m_top = rhs.m_top;
-      
-      // allocate new array
-      try
-      {
-         m_data = new T[m_capacity];
-      }
-      catch (std::bad_alloc)
-      {
-         throw "ERROR: Unable to allocate a new buffer for Queue";
-      }
-      // copy over values from rhs
-      for (int i = 0; i < rhs.m_top; i++)
-      {
-         m_data[i] = rhs.m_data[i];
-      }
-      
-      return *this;
+      q.pop();
+      cout << "BUG! We should not be able to pop() with an empty queue!\n";
    }
+   catch (const char * error)
+   {
+      cout << "\tQueue::pop() error message correctly caught.\n"
+           << "\t\"" << error << "\"\n";
+   }      
+#endif // TEST4
 }
-
-#endif // QUEUE_H
