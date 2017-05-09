@@ -17,6 +17,7 @@
 
 #include <cassert>
 #include <new>
+#include <iostream>
 
 /************************************************
  * QUEUE
@@ -90,40 +91,36 @@ template <class T>
 Queue <T> :: Queue(const Queue <T> & rhs) throw (const char *)
 {
    assert(rhs.m_capacity >= 0);
-   
-   // resize array to the rhs
-   if (m_capacity < rhs.size())
-   {
+
+  
       try
       {
          T * temp = new T[rhs.size()];
-         
-         // delete data
-         if(m_data)
-         delete [] m_data;
          
          // assign new data
          m_data = temp;
       }
       catch (std::bad_alloc)
       {
-         throw "ERROR: Unable to allocate a new buffer for queue";
+         throw "ERROR: Unable to allocate a new buffer for Queue";
       }
-   }
    
    // insure the indices are beginning at 0
    m_numPop = 0;
-   m_numPush = 0;   
+   m_numPush = 0;  
+   m_capacity = 0;
    
+   int j = 0;
    // IF there is data to copy
    if (rhs.size() > 0)
    {      
       // copy over data
-      assert(rhs.m_capacity > 0);
       for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
       {
-         push(rhs.m_data[i % rhs.m_capacity]);
+         m_data[j++] = rhs.m_data[(i % rhs.capacity())];
+	     m_numPush++;
       }
+	  m_capacity = rhs.capacity();
    }
 
 }
@@ -177,7 +174,7 @@ void Queue<T>::push(const T & t) throw (const char *)
 		resize(capacity() * 2);
 	}
    
-   m_numPush++;
+    m_numPush++;
 	m_data[iTail()] = t;
 }
 
@@ -189,7 +186,7 @@ template<class T>
 void Queue<T>::pop() throw(const char *)
 {
 	if (empty())
-		throw "ERROR: attempting to pop from an empty Queue";
+		throw "ERROR: attempting to pop from an empty queue";
 	m_numPop++;
 }
 
@@ -247,26 +244,33 @@ T Queue<T> :: back() const throw (const char *)
  * Overload assignment operator
  **************************************************/
  template <class T>
-Queue<T> & Queue <T> :: operator = (const Queue <T> & rhs)
-{
-   // don't copy yourself
-   if (this != &rhs)
-   {
-      m_numPush = m_numPop = 0;
-      
-      // resize array to the rhs
-      if (m_capacity < rhs.size())
-         resize (rhs.size());
-      
-      // copy over data
-      for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
-      {
-         push(rhs.m_data[i % rhs.m_capacity]);
-      }
-      
-      return *this;
-   } // IF rhs != THIS
-}
+ Queue<T> & Queue <T> :: operator = (const Queue <T> & rhs)
+ {
+	 // don't copy yourself
+	 if (this != &rhs)
+	 {
+		 // resize array to the rhs
+		 if (m_capacity < rhs.size())
+			 resize(rhs.size());
+
+		 // insure the indices are beginning at 0
+
+		 int j = 0;
+		 // IF there is data to copy
+		 m_numPush = 0;
+		 m_numPop = 0;
+		 if (rhs.size() > 0)
+		 {
+			 // copy over data
+			 for (int i = rhs.m_numPop; i < rhs.m_numPush; i++)
+			 {
+				 m_data[j++] = rhs.m_data[(i % rhs.capacity())];
+				 m_numPush++;
+			 }
+		 }
+	 }
+	 return *this;
+ }
    
 /***************************************************
 * QUEUE :: RESIZE
@@ -282,30 +286,21 @@ void Queue<T>::resize(int newCap)
    {
       T *temp = new T[newCap];
       
-      int index = 0;
-      assert(newCap > 0);
-      for (int i = m_numPop; i < m_numPush; i++)
+      for (int i = 0; i < size(); i++)
       {
-         temp[index] = m_data[i % m_capacity];
-         index++;
+         temp[i] = m_data[(iHead() + i) % capacity()];
       }
-      
+	  m_numPush = size();
+	  m_numPop = 0;
       m_capacity = newCap;
       
-      // out with the old
-      delete [] m_data;
-      
       // in with the new
-      m_data = temp;
-      
-      // reset Pop & Push counts
-      m_numPop = 0;
-      m_numPush = index - 1;         
+      m_data = temp;       
 
    }
    catch(std::bad_alloc)
    {
-      throw "ERROR: Unable to allocate a new buffer for queue";
+      throw "ERROR: Unable to allocate a new buffer for Queue";
    }
 
 }
